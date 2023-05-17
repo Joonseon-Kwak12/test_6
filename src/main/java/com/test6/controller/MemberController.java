@@ -94,6 +94,14 @@ public class MemberController {
 			return Ut.historyBack("이미 사용 중인 메일 주소입니다.");
 		}
 		
+		if (loginPw.equals("") || loginPw == null) {
+			return Ut.historyBack("비밀번호를 입력해주세요.");
+		} else if (loginPw.trim().length() < 5) {
+			return Ut.historyBack("비밀번호는 5글자 이상이어야 합니다.");
+		} else if (loginPw.contains(" ")) {
+			return Ut.historyBack("비밀번호에는 공백이 포함될 수 없습니다.");
+		}
+		
 		memberRepository.join(loginId, loginPw, name, nickname, cellphoneNum, email);
 		
 		//return "redirect:/login";

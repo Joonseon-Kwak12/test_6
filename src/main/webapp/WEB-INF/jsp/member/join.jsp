@@ -19,10 +19,10 @@
 			<div class="grid grid-cols-[130px_2fr] text-left">
 				<div class="text-white">아이디</div>
 				<input name="loginId" id="input-loginId" class="rounded" placeholder="아이디를 입력해주세요" />
-				<div class="h-6 col-start-2 text-white" id="loginIdDupMsg"></div>
+				<div class="h-6 col-start-2 text-white text-sm" id="loginIdDupMsg"></div>
 				<div class="text-white">비밀번호</div>
-				<input name="loginPw" class="rounded" placeholder="비밀번호를 입력해주세요" />
-				<div class="h-6 col-span-2"></div>
+				<input name="loginPw" id="input-loginPw" class="rounded" placeholder="비밀번호를 입력해주세요" />
+				<div class="h-6 col-start-2 text-white text-sm" id="loginPwValidationMsg"></div>
 				<div class="text-white">비밀번호 확인</div>
 				<input name="loginPwConfirm" class="rounded" placeholder="비밀번호 확인을 입력해주세요" />
 				<div class="h-6 col-span-2"></div>
@@ -37,7 +37,7 @@
 				<div class="h-6 col-span-2"></div>
 				<div class="text-white">이메일</div>
 				<input name="email" id="input-email" class="rounded" placeholder="이메일을 입력해주세요" />
-				<div class="h-6 col-start-2 text-white" id="emailDupMsg"></div>
+				<div class="h-6 col-start-2 text-white text-sm" id="emailDupMsg"></div>
 			</div>
 			<div class="flex justify-center mt-6 text-[#3B5998] gap-8">
 				<button class="bg-white rounded py-1 px-3" type="submit" value="회원가입">회원가입</button>
@@ -73,7 +73,7 @@
 				return;
 			}
 			if (form.loginPwConfirm.value != form.loginPw.value) {
-				alert('비밀번호가 일치하지 않습니다');
+				alert('비밀번호와 비밀번호 확인이 일치하지 않습니다');
 				form.loginPw.focus();
 				return;
 			}
@@ -160,6 +160,36 @@
 			}
 		}
 
+		function checkValidationLoginPw(loginPw) {
+			
+			const loginPwValidationMsg = document.querySelector('#loginPwValidationMsg');
+			loginPwValidationMsg.replaceChildren();
+			
+			if (loginPw === "" || loginPw === undefined) {
+				let msg = document.createElement("div");
+				msg.innerText = "비밀번호를 입력해주세요.";
+				loginPwValidationMsg.append(msg);
+				msg.classList.add("text-red-300");
+				return;
+			}
+			
+			if (loginPw.trim().length < 5) {
+				let msg = document.createElement("div");
+				msg.innerText = "비밀번호는 5글자 이상이어야 합니다.";
+				loginPwValidationMsg.append(msg);
+				msg.classList.add("text-red-300");
+				return;
+			}
+			
+			if (loginPw.indexOf(' ') >= 0) {
+				let msg = document.createElement("div");
+				msg.innerText = "비밀번호에는 공백이 포함될 수 없습니다.";
+				loginPwValidationMsg.append(msg);
+				msg.classList.add("text-red-300");
+				return;
+			}
+		}
+		
 		async function checkDupEmail(email) {
 			validEmail = "";
 			
@@ -172,7 +202,7 @@
 				msg.innerText = "메일 주소를 입력해주세요.";
 				emailDupMsg.append(msg);
 				msg.classList.add("text-red-300");
-				validLoginId = "";
+				validEmail = "";
 				return;
 			}
 			
@@ -181,7 +211,7 @@
 				msg.innerText = "이메일 형식이 바르지 않습니다.";
 				emailDupMsg.append(msg);
 				msg.classList.add("text-red-300");
-				validLoginId = "";
+				validEmail = "";
 				return;
 			}
 
@@ -205,7 +235,6 @@
 			} else {
 				alert("HTTP-Error: " + response.status);
 			}
-
 		}
 		
 		const inputLoginId = document.querySelector('#input-loginId');
@@ -213,6 +242,11 @@
 			checkDupLoginId(inputLoginId.value);
 		};
 		// inputLoginId.onblur = checkDupLoginId(inputLoginId.value); // 이렇게 적으면 처음 시작할 때 딱 한 번만 실행됨
+		
+		const inputLoginPw = document.querySelector('#input-loginPw');
+		inputLoginPw.onkeyup = function() {
+			checkValidationLoginPw(inputLoginPw.value);
+		};
 		
 		const inputEmail = document.querySelector('#input-email');
 		inputEmail.onblur = function() {
