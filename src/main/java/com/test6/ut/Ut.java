@@ -21,6 +21,15 @@ public class Ut {
 		return Ut.f("<script> const msg = '%s'.trim(); if (msg.length > 0) {alert(msg);}history.back();</script>", msg);
 	}
 	
+	public static String setContentTypeAndHistoryBack(String msg, HttpServletResponse response) {
+		
+		response.setContentType("text/html; charset=UTF-8");
+		
+		print(historyBack(msg), response);
+		
+		return "";
+	}
+	
 	public static String replace(String msg, String uri) {
 		if (msg == null) {
 			msg = "";

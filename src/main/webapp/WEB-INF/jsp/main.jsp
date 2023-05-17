@@ -42,7 +42,9 @@
 				</div>
 			</div>
 		</article>
-
 	</section>
+	<div class="m-auto p-1 w-[300px] text-sm">
+		<a href="/logout">로그아웃</a>
+	</div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.test6.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -82,18 +83,21 @@ public class MemberController {
 	}
 	
 	@PostMapping("/join")
-	public String doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+	@ResponseBody
+	public String doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email, HttpServletResponse response) {
 		
-		int id = memberRepository.join(loginId, loginPw, name, nickname, cellphoneNum, email);
-		System.out.println("------------------------------");
-		System.out.println(id);
-		System.out.println("------------------------------");
-		int did = memberRepository.getLastInsertId();
-		System.out.println("------------------------------");
-		System.out.println(did);
-		System.out.println("------------------------------");
+		if (memberRepository.getMemberByLoginId(loginId) != null) {
+			return Ut.historyBack("이미 사용 중인 아이디입니다.");
+		}
 		
-		return "redirect:/login";
+		if (memberRepository.getMemberByLoginId(loginId) != null) {
+			return Ut.historyBack("이미 사용 중인 메일 주소입니다.");
+		}
+		
+		memberRepository.join(loginId, loginPw, name, nickname, cellphoneNum, email);
+		
+		//return "redirect:/login";
+		return Ut.replace("회원가입 성공", "/login");
 	}
 	
 	@GetMapping("/checkDupLoginId")
